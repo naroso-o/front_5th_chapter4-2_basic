@@ -32,8 +32,15 @@ jobs:
           npm install -g @lhci/cli@0.14.x
           npm install -g http-server
 
+      - name: Discord Notify (index.html not found)
+        if: failure()
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+            -d "{\"content\": \"🚨 \`index.html\` 파일이 없습니다. Lighthouse 워크플로우를 중단했습니다.\\n📁 repository: ${{ github.repository }}\\n👤 triggerd by: ${{ github.actor }}\"}" \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+
       - name: Start local server
-        run: http-server public -p 8080 &
+        run: http-server . -p 8080 &
 
       - name: Run Lighthouse CI
         id: lighthouse
