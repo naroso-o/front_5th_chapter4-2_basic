@@ -32,10 +32,9 @@ jobs:
           npm install -g @lhci/cli@0.14.x
           npm install -g http-server
 
-      # 일부러 index.html이 없는 경로에서 실행
       - name: Check if index.html exists
         run: |
-          if [ ! -f ./index.html ]; then
+          if [ ! -f public/index.html ]; then
             echo "index.html not found"
             exit 1
           fi
