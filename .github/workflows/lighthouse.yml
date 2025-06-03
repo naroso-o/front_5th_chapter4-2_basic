@@ -32,9 +32,10 @@ jobs:
           npm install -g @lhci/cli@0.14.x
           npm install -g http-server
 
+      # 일부러 index.html이 없는 경로에서 실행
       - name: Check if index.html exists
         run: |
-          if [ ! -f public/index.html ]; then
+          if [ ! -f ./index.html ]; then
             echo "index.html not found"
             exit 1
           fi
@@ -47,7 +48,7 @@ jobs:
             ${{ secrets.DISCORD_WEBHOOK_URL }}
 
       - name: Start local server
-        run: http-server . -p 8080 &
+        run: http-server public -p 8080 &
 
       - name: Run Lighthouse CI
         id: lighthouse
