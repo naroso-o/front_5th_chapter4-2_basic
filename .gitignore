@@ -1,2 +1,8 @@
 .DS_Store
 .idea
+.firebase/
+firebase-debug.log*
+ui-debug.log*
+.env
+public/js/env.js
+
