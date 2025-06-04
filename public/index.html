@@ -68,18 +68,17 @@
     <section class="hero">
 
         <picture>
-            <source srcset="images/Hero_Desktop.webp" type="image/webp" alt="Hero Desktop Image" />
-            <img class="desktop" src="images/Hero_Desktop.jpg" width="3400" height="2040" alt="Hero Desktop Image" />
-        </picture>
+            <source srcset="images/Hero_Desktop.webp" type="image/webp" media="(min-width: 1025px)"
+                fetchpriority="high" />
 
-        <picture>
-            <source srcset="images/Hero_Mobile.webp" type="image/webp" alt="Hero Mobile Image" />
-            <img class="mobile" src="images/Hero_Mobile.jpg" width="375" height="667" alt="Hero Mobile Image" />
-        </picture>
+            <source srcset="images/Hero_Tablet.webp" type="image/webp"
+                media="(min-width: 768px) and (max-width: 1024px)" fetchpriority="high" />
 
-        <picture>
-            <source srcset="images/Hero_Tablet.webp" type="image/webp" alt="Hero Tablet Image" />
-            <img class="tablet" src="images/Hero_Tablet.jpg" width="1440" height="1155" alt="Hero Tablet Image" />
+            <source srcset="images/Hero_Mobile.webp" type="image/webp" media="(max-width: 767px)"
+                fetchpriority="high" />
+
+            <img src="images/Hero_Mobile.jpg" width="375" height="667" alt="Hero Image" fetchpriority="high"
+                decoding="async" />
         </picture>
 
         <div class="hero-content">
