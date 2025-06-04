@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hanghae-plus-frontend-5th-4-2.web.app/sitemap.xml
