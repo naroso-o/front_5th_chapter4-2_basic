@@ -4,12 +4,28 @@
 
 ## 성능 개선 보고서
 
-(작성 필요)
-| 항목 | 개선 전 점수 | 개선 후 점수 | 개선 이유 | 개선 방법 | 개선 후 향상된 지표 |
-|------------------|--------------|--------------|---------------------------------------------------------------------------|------------------------------------------------------------------------------------------|---------------------------------------------|
-| 이미지 | 0.67초 | 0.42초 | JPG만 사용하고 있었으며, WebP가 존재해도 브라우저가 활용하지 않음 | `<picture>` 태그와 `source` 태그를 사용하여 WebP 우선 제공 | Largest Contentful Paint 개선 |
-| 이미지 크기 | N/A | N/A | `width`, `height` 속성이 없는 이미지로 인해 레이아웃 시프트 발생 | 모든 `<img>` 태그에 `width`, `height` 명시 | Cumulative Layout Shift 개선 |
-| 이미지 로딩 | - | - | 초기 렌더링에 불필요한 이미지가 로딩됨 | `<img loading="lazy">` 속성 추가 | First Contentful Paint, TTI 개선 |
-| JS 리소스 최적화 | 2.3MB | 850KB | 모든 JS 파일이 한 번에 로딩되어 초기 로딩이 지연됨 | 코드 스플리팅, 필요 리소스만 import | Time to Interactive, Total Blocking Time 개선 |
-| 폰트 로딩 | - | - | Google Fonts 로딩이 느림 | `preconnect`, `preload` 추가 | First Contentful Paint 개선 |
-| 애니메이션 | N/A | N/A | `transform`, `opacity` 사용 없이 애니메이션 처리 | `will-change` 또는 `transform/opacity` 기반으로 수정 | Animation 성능 개선 |
+| 항목 | 개선 전 점수 | 개선 후 점수 | 개선 이유 | 개선 방법 |
+|------|--------------|--------------|-----------|------------|
+| LCP 이미지 처리 | 9.83초 | 3.31초 | Hero 이미지가 JPG + lazy로 제공되어 지연 발생 | `<picture>` + WebP + `fetchpriority="high"` + `width/height` 명시 |
+| TBT 차단 자원 | 90ms | 0ms | main-thread를 점유하는 JS가 많았음 | JS 분할, `defer` 사용 (`main.js`, `products.js`) |
+| 이미지 포맷 | JPG | WebP | 브라우저가 고효율 포맷(WebP) 사용 못함 | `<picture>` + `<source type="image/webp">` 구성 |
+| 이미지 크기 명시 | 없음 | 있음 | CLS 발생 (레이아웃 변동) | 모든 `<img>`에 `width`, `height` 속성 명시 |
+| 이미지 로딩 방식 | eager | lazy 적용 | 초반 이미지 로딩량 과도 | `loading="lazy"` 사용 (Hero 제외) |
+| 렌더링 차단 리소스 | 있음 | 없음 | 외부 폰트 및 스크립트가 렌더링 차단 | `preconnect`, `preload`, `defer`, `async` 적용 |
+| 폰트 처리 | 느림 | 개선 | Google Fonts 로딩 지연, 텍스트 FOUT | `font-display: swap`, preload 사용 |
+| 웹 접근성 | 82% | 98% | label 누락, contrast 부족 등 | ARIA 라벨 추가, 텍스트 대비 개선 등 |
+| SEO | 82% | 100% | 메타 태그 미비, 구조화 부족 | 메타 정보 보완, semantic 구조 개선 |
+
+---
+
+## 🧩 개선 후 향상된 지표 정리
+
+- **Largest Contentful Paint (LCP)**: 9.83s → 3.31s → 이미지 포맷, priority 및 preload로 개선
+- **Cumulative Layout Shift (CLS)**: 0.011 → 0.048 → 이미지 크기 명시 및 폰트 처리로 안정화
+- **Total Blocking Time (TBT)**: 90ms → 0ms → JS 최적화 및 `defer` 처리
+- **Performance 점수**: 72 → 92
+- **Accessibility 점수**: 82 → 98
+- **SEO 점수**: 82 → 100
+
+
+*INP (Interaction to Next Paint)는 두 테스트 모두 N/A 상태로 측정되지 않음.
